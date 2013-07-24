@@ -90,7 +90,7 @@ class Random(BasePlayer):
                     m,
                     player_reputations,
                     ):
-        return ['h' if random.random() < self.p_hunt else 's' for p in player_reputations]
+        return ['h' if random.random() < self.p_hunt and len(player_reputations) > 2 else 's' for p in player_reputations]
 
 class FairHunter(BasePlayer):
     '''Player that tries to be fair by hunting with same probability as each opponent'''
@@ -105,5 +105,21 @@ class FairHunter(BasePlayer):
                 m,
                 player_reputations,
                 ):
-        return ['h' if random.random() < rep else 's' for rep in player_reputations]
+        return ['h' if random.random() < rep and len(player_reputations) > 2 else 's' for rep in player_reputations]
         
+
+class SmarterMaxRepHunter(BasePlayer):
+    '''Player that hunts only with people with max reputation.'''
+    def __init__(self):
+        self.name = "SmarterMaxRepHunter"
+
+    def hunt_choices(
+                    self,
+                    round_number,
+                    current_food,
+                    current_reputation,
+                    m,
+                    player_reputations,
+                    ):
+        threshold = max(player_reputations)
+        return ['h' if rep == threshold and len(player_reputations) > 2 else 's' for rep in player_reputations]

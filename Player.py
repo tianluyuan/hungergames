@@ -17,7 +17,11 @@ class BasePlayer(object):
     Base class so I don't have to repeat bookkeeping stuff.
     Do not edit unless you're working on the simulation.
     '''
-    
+    def __init__(self):
+        self.total_expeditions = 0
+        self.total_food_earnings = 0
+        self.food_earnings = []
+
     def __str__(self):
         try:
             return self.name
@@ -39,13 +43,28 @@ class StatusQuo(BasePlayer):
     '''
     Your strategy starts here.
     '''
-    def __init__(self):
-        self.name = "StatusQuo"
-        self.total_expeditions = 0
+    name = "StatusQuo"
 
     def initial_choices(self, player_reputations):
-        return ['h']*len(player_reputations)
+        return ['h'] * len(player_reputations)
             
+    def get_num_hunts_needed(self, current_reputation, player_reputations):
+        # Calculate the median reputation
+        arr_reputations = np.array(player_reputations)
+        median_reputation = 1-np.median(arr_reputations)
+                
+        # Keep track of over number of hunts+slacks
+        # Calculate the number of hunts needed to match median rep
+        hunts_so_far = self.total_expeditions * current_reputation
+        hunts_for_median = (self.total_expeditions+len(player_reputations))*median_reputation
+        print hunts_so_far, hunts_for_median
+        
+        hunts_needed = int(hunts_for_median - hunts_so_far)
+
+        self.total_expeditions += len(player_reputations)
+        
+        return hunts_needed
+
     def hunt_choices(
                     self,
                     round_number,
@@ -54,26 +73,19 @@ class StatusQuo(BasePlayer):
                     m,
                     player_reputations,
                     ):
-        '''Required function defined in the rules'''
-        # Keep track of over number of hunts+slacks
-        self.total_expeditions += len(player_reputations)
+        '''Required function defined in the rules'''        
+        hunts_needed = self.get_num_hunts_needed(current_reputation, player_reputations)
 
         if round_number == 1:
             return self.initial_choices(player_reputations)
 
-        # Calculate the median reputation
-        arr_reputations = np.array(player_reputations)
-        median_reputation = np.median(arr_reputations)
-        
-        # Calculate the number of hunts needed to match median rep
-        hunts_so_far = self.total_expeditions * current_reputation
-        hunts_for_median = (self.total_expeditions+len(player_reputations))*median_reputation
-        
-        hunts_needed = hunts_for_median - hunts_so_far
-        
-        n_highest_reputations = heapq.nlargest(hunts_needed, player_reputations)
-
+        # Default choices is to always slack
         choices = ['s']*len(player_reputations)
+
+        if hunts_needed < 1 or len(player_reputations) < 3:
+            return choices
+
+        n_highest_reputations = heapq.nlargest(hunts_needed, player_reputations)
         for rep in n_highest_reputations:
             player_to_hunt_with = player_reputations.index(rep)
             
@@ -90,3 +102,34 @@ class StatusQuo(BasePlayer):
         '''Required function defined in the rules'''
         pass
         
+class FoodTitForTat(BasePlayer):
+    '''
+    Your strategy starts here.
+    '''
+    name = "FoodTitForTat"
+
+    def initial_choices(self, player_reputations):
+        return ['s']*len(player_reputations)
+            
+    def hunt_choices(
+                    self,
+                    round_number,
+                    current_food,
+                    current_reputation,
+                    m,
+                    player_reputations,
+                    ):
+        '''Required function defined in the rules'''
+        if round_number == 1:
+            return self.initial_choices(player_reputations)
+        choices = ['h' if food_earned_last > 0 else 's' for food_earned_last in self.food_earnings]
+        return choices[0:len(player_reputations)]
+
+    def hunt_outcomes(self, food_earnings):
+        '''Required function defined in the rules'''
+        self.total_food_earnings += sum(food_earnings)
+        self.food_earnings = food_earnings
+
+    def round_end(self, award, m, number_hunters):
+        '''Required function defined in the rules'''
+        pass

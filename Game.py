@@ -58,7 +58,7 @@ class Game(object):
     
     See app.py for a bare-minimum test game.
     '''   
-    def __init__(self, players, verbose=True, min_rounds=700, average_rounds=5000):
+    def __init__(self, players, verbose=True, min_rounds=5000, average_rounds=10000):
         self.verbose = verbose
         self.max_rounds = min_rounds + int(random.expovariate(1/(average_rounds-min_rounds)))
         self.round = 0

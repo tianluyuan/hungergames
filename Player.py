@@ -9,6 +9,8 @@
 # an Issue to https://github.com/ChadAMiller/hungergames/issues or email me.
 
 # You can see more sample player classes in bots.py
+import numpy as np
+import heapq
 
 class BasePlayer(object):
     '''
@@ -33,11 +35,17 @@ class BasePlayer(object):
         pass
 
 
-class Player(BasePlayer):
+class StatusQuo(BasePlayer):
     '''
     Your strategy starts here.
     '''
-    
+    def __init__(self):
+        self.name = "StatusQuo"
+        self.total_expeditions = 0
+
+    def initial_choices(self, player_reputations):
+        return ['h']*len(player_reputations)
+            
     def hunt_choices(
                     self,
                     round_number,
@@ -47,10 +55,32 @@ class Player(BasePlayer):
                     player_reputations,
                     ):
         '''Required function defined in the rules'''
-                    
-        return ['s']*len(player_reputations)
-        
+        # Keep track of over number of hunts+slacks
+        self.total_expeditions += len(player_reputations)
 
+        if round_number == 1:
+            return self.initial_choices(player_reputations)
+
+        # Calculate the median reputation
+        arr_reputations = np.array(player_reputations)
+        median_reputation = np.median(arr_reputations)
+        
+        # Calculate the number of hunts needed to match median rep
+        hunts_so_far = self.total_expeditions * current_reputation
+        hunts_for_median = (self.total_expeditions+len(player_reputations))*median_reputation
+        
+        hunts_needed = hunts_for_median - hunts_so_far
+        
+        n_highest_reputations = heapq.nlargest(hunts_needed, player_reputations)
+
+        choices = ['s']*len(player_reputations)
+        for rep in n_highest_reputations:
+            player_to_hunt_with = player_reputations.index(rep)
+            
+            choices[player_to_hunt_with] = 'h'
+
+        return choices
+        
     def hunt_outcomes(self, food_earnings):
         '''Required function defined in the rules'''
         pass

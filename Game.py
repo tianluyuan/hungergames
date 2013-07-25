@@ -79,11 +79,7 @@ class Game(object):
         return len(self.players)
         
     def calculate_m(self):
-        try:
             return random.randrange(1, self.P*(self.P-1))
-        except ValueError:
-            # m stops existing for 2 players
-            return 3
             
         
     def play_round(self):
@@ -95,7 +91,7 @@ class Game(object):
         
         # Beginning of round setup
         random.shuffle(self.players)
-        reputations = tuple(player.rep for player in self.players)
+        reputations = list(player.rep for player in self.players)
         
         # Get player strategies
         strategies = []
@@ -115,7 +111,7 @@ class Game(object):
                 if i!=j:
                     results[i].append(payout(strategies[i][j], strategies[j][i]))
                 
-        total_hunts = sum(s.count('h') for s in strategies)		
+        total_hunts = sum(s.count('h') for s in strategies)
         
         if (self.verbose):
             print ("There were {} hunts of {} needed for bonus".format(total_hunts, m))
@@ -125,7 +121,7 @@ class Game(object):
             if (self.verbose):
                 print("Cooperation Threshold Acheived. Bonus of {} awarded to each player".format(self.m_bonus))
         else:
-	        bonus = 0
+            bonus = 0
         
         # Award food and let players run cleanup tasks
         for strat, result, player in zip(strategies, results, self.players):
@@ -137,9 +133,10 @@ class Game(object):
             player.player.hunt_outcomes(result)
             player.player.round_end(bonus, m, total_hunts)
             
-                    
+    
         if self.verbose:
-            for p in self.players:
+            newlist = sorted(self.players, key=lambda x: x.food, reverse=True)
+            for p in newlist:
                 print (p)
                    
         

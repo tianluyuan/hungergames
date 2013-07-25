@@ -109,6 +109,7 @@ class FairHunter(BasePlayer):
                 ):
         return ['h' if random.random() < rep and len(player_reputations) > 2 else 's' for rep in player_reputations]
         
+<<<<<<< HEAD
 
 class SmarterMaxRepHunter(BasePlayer):
     '''Player that hunts only with people with max reputation.'''
@@ -250,6 +251,7 @@ class AvgSlacker(BasePlayer):
                     m,
                     player_reputations,
                     ):
+
         mean = 1 if round_number == 1 else 1-np.mean(np.array(player_reputations))
         return ['h' if random.random() < mean and len(player_reputations) > 2 else 's' for rep in player_reputations]
 
@@ -376,3 +378,20 @@ class ReversePsychologyHunter(BasePlayer):
             choices[player_to_slack_with] = 's'
 
         return choices
+
+class BoundedHunter(BasePlayer):
+    '''Player that hunts whenever the other's reputation is within some range.'''
+    def __init__(self,lower,upper):
+        self.name = "BoundedHunter" + str(lower)+'-'+str(upper)
+        self.low = lower
+        self.up = upper
+
+        return ['h' if self.low <= rep <= self.up else 's' for rep in player_reputations]
+        
+class AverageHunter(BasePlayer):
+    '''Player that tries to maintain the average reputation, but spreads its hunts randomly.'''
+    
+    def __init__(self):
+        self.name = "AverageHunter"
+        avg_rep = sum(player_reputations) / float(len(player_reputations))
+        return ['h' if random.random() < avg_rep else 's' for rep in player_reputations]

@@ -52,64 +52,29 @@ class BasePlayer(object):
 
 
 class Player(BasePlayer):
-    '''
-    Your strategy starts here.
-    '''
-    name = "Player_StatusQuo"
+    def __init__(self):
+        """
+        Optional __init__ method is run once when your Player object is created before the
+        game starts
 
-    def initial_choices(self, player_reputations):
-        return ['h'] * len(player_reputations)
-            
-    def get_num_hunts_needed(self, current_reputation, player_reputations):
-        # Calculate the median reputation
-        arr_reputations = np.array(player_reputations)
-        median_reputation = 1-np.median(arr_reputations)
-                
-        # Keep track of over number of hunts+slacks
-        # Calculate the number of hunts needed to match median rep
-        hunts_so_far = self.total_expeditions * current_reputation
-        hunts_for_median = (self.total_expeditions+len(player_reputations))*median_reputation
-        print hunts_so_far, hunts_for_median
-        
-        hunts_needed = int(hunts_for_median - hunts_so_far)
+        You can add other internal (instance) variables here at your discretion.
 
-        self.total_expeditions += len(player_reputations)
-        
-        return hunts_needed
+        You don't need to define food or reputation as instance variables, since the host
+        will never use them. The host will keep track of your food and reputation for you
+        as well, and return it through hunt_choices.
+        """
+        super(Player, self).__init__()
 
-    def hunt_choices(
-                    self,
-                    round_number,
-                    current_food,
-                    current_reputation,
-                    m,
-                    player_reputations,
-                    ):
-        '''Required function defined in the rules'''        
-        hunts_needed = self.get_num_hunts_needed(current_reputation, player_reputations)
+    # All the other functions are the same as with the non object oriented setting (but they
+    # should be instance methods so don't forget to add 'self' as an extra first argument).
 
-        if round_number == 1:
-            return self.initial_choices(player_reputations)
+    def hunt_choices(self, round_number, current_food, current_reputation, m,
+            player_reputations):
+        hunt_decisions = ['h' for x in player_reputations] # replace logic with your own
+        return hunt_decisions
 
-        # Default choices is to always slack
-        choices = ['s']*len(player_reputations)
-
-        if hunts_needed < 1 or len(player_reputations) < 3:
-            return choices
-
-        n_highest_reputations = heapq.nlargest(hunts_needed, player_reputations)
-        for rep in n_highest_reputations:
-            player_to_hunt_with = player_reputations.index(rep)
-            
-            choices[player_to_hunt_with] = 'h'
-
-        return choices
-        
     def hunt_outcomes(self, food_earnings):
-        '''Required function defined in the rules'''
-        pass
-        
+        pass # do nothing
 
     def round_end(self, award, m, number_hunters):
-        '''Required function defined in the rules'''
-        pass
+        pass # do nothing

@@ -257,7 +257,9 @@ class StatusQuoSlacker(BasePlayer):
     '''
     Your strategy starts here.
     '''
-    name = "StatusQuoSlacker"
+    def __init__(self):
+        super(StatusQuoSlacker, self).__init__()
+        self.name = "StatusQuoSlacker"
 
     def initial_choices(self, player_reputations):
         return ['h'] * len(player_reputations)
@@ -339,7 +341,9 @@ class ReversePsychologyHunter(BasePlayer):
     '''Slack with players of highest reps and lowest reps, hunt with players of medium rep
     Keep reputation within top 10%
     '''
-    name = 'ReversePsychologyHunter'
+    def __init__(self):
+        super(ReversePsychologyHunter, self).__init__()
+        self.name = 'ReversePsychologyHunter'
 
     def initial_choices(self, player_reputations):
         return ['h']*len(player_reputations)

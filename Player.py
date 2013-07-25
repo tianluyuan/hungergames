@@ -38,12 +38,24 @@ class BasePlayer(object):
     def round_end(*args, **kwargs):
         pass
 
+    def get_num_hunts_needed(self, current_reputation, ideal_reputation, n_partners_remaining):
+        # Keep track of over number of hunts+slacks
+        # Calculate the number of hunts needed to match median rep
+        hunts_so_far = self.total_expeditions * current_reputation
+        hunts_for_ideal = (self.total_expeditions+n_partners_remaining)*ideal_reputation
+        
+        hunts_needed = int(hunts_for_ideal - hunts_so_far)
 
-class StatusQuo(BasePlayer):
+        self.total_expeditions += n_partners_remaining
+        
+        return hunts_needed
+
+
+class Player(BasePlayer):
     '''
     Your strategy starts here.
     '''
-    name = "StatusQuo"
+    name = "Player_StatusQuo"
 
     def initial_choices(self, player_reputations):
         return ['h'] * len(player_reputations)
@@ -97,38 +109,6 @@ class StatusQuo(BasePlayer):
         '''Required function defined in the rules'''
         pass
         
-
-    def round_end(self, award, m, number_hunters):
-        '''Required function defined in the rules'''
-        pass
-        
-class FoodTitForTat(BasePlayer):
-    '''
-    Your strategy starts here.
-    '''
-    name = "FoodTitForTat"
-
-    def initial_choices(self, player_reputations):
-        return ['s']*len(player_reputations)
-            
-    def hunt_choices(
-                    self,
-                    round_number,
-                    current_food,
-                    current_reputation,
-                    m,
-                    player_reputations,
-                    ):
-        '''Required function defined in the rules'''
-        if round_number == 1:
-            return self.initial_choices(player_reputations)
-        choices = ['h' if food_earned_last > 0 else 's' for food_earned_last in self.food_earnings]
-        return choices[0:len(player_reputations)]
-
-    def hunt_outcomes(self, food_earnings):
-        '''Required function defined in the rules'''
-        self.total_food_earnings += sum(food_earnings)
-        self.food_earnings = food_earnings
 
     def round_end(self, award, m, number_hunters):
         '''Required function defined in the rules'''

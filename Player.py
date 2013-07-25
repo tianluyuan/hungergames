@@ -63,6 +63,7 @@ class Player(BasePlayer):
         will never use them. The host will keep track of your food and reputation for you
         as well, and return it through hunt_choices.
         """
+        # Run the inherited class' __init__
         super(Player, self).__init__()
 
     # All the other functions are the same as with the non object oriented setting (but they

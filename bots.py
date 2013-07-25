@@ -109,8 +109,6 @@ class FairHunter(BasePlayer):
                 ):
         return ['h' if random.random() < rep and len(player_reputations) > 2 else 's' for rep in player_reputations]
         
-<<<<<<< HEAD
-
 class SmarterMaxRepHunter(BasePlayer):
     '''Player that hunts only with people with max reputation.'''
     def __init__(self):
@@ -386,6 +384,14 @@ class BoundedHunter(BasePlayer):
         self.low = lower
         self.up = upper
 
+    def hunt_choices(
+                    self,
+                    round_number,
+                    current_food,
+                    current_reputation,
+                    m,
+                    player_reputations,
+                    ):
         return ['h' if self.low <= rep <= self.up else 's' for rep in player_reputations]
         
 class AverageHunter(BasePlayer):
@@ -393,5 +399,14 @@ class AverageHunter(BasePlayer):
     
     def __init__(self):
         self.name = "AverageHunter"
+
+    def hunt_choices(
+                    self,
+                    round_number,
+                    current_food,
+                    current_reputation,
+                    m,
+                    player_reputations,
+                    ):
         avg_rep = sum(player_reputations) / float(len(player_reputations))
         return ['h' if random.random() < avg_rep else 's' for rep in player_reputations]

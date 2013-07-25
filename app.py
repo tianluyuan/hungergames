@@ -7,7 +7,7 @@ from Player import Player
 
 players = [SmarterMaxRepHunter(), 
            StatusQuo(), AvgHunter(), AvgSlacker(),
-           Alternator(), Freeloader(),
+           Alternator(), 
            StatusQuo(), Random(0.3),
            Freeloader(), StatusQuo(), FairHunter(), 
            SmarterMaxRepHunter(), SmarterMaxRepHunter(), 
@@ -15,7 +15,8 @@ players = [SmarterMaxRepHunter(),
            FairHunter(), Random(0.5),
            SmarterMaxRepHunter(), SmarterMaxRepHunter(), 
            StatusQuo(), FoodTatForTit(), 
-           FairHunter(),
+           FairHunter(), AverageHunter(),
+           BoundedHunter(0.7,1.0),
            FoodTitForTat(), StatusQuoSlacker()]
 
 game = Game(players)

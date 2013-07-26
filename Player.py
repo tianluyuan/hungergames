@@ -86,7 +86,7 @@ class Player(BasePlayer):
         for this round.
         '''
         
-        if 'h' in my_choice:
+        if 'h' == my_choice:
             # If I hunted last round
             # If they hunted, food_earnings will be 0
             return 'h' if food_earnings==0 else 's'        
@@ -107,10 +107,13 @@ class Player(BasePlayer):
         my_choice_last = self.choices_last[idx_last_round]
         food_earnings_last = self.results_last[idx_last_round]
 
-        if partner_rep ==0:
-            print 'idx', idx_last_round
-            print 'choice', my_choice_last
-            print 'earnings',food_earnings_last
+        # print 'partner rep', partner_rep
+        # print 'idx', idx_last_round
+        # print 'choice', my_choice_last
+        # print 'earnings',food_earnings_last
+        # print 'reps last', self.reps_last
+        # print 'choices last', self.choices_last
+        # print 'results last', self.results_last
 
         return self.make_decision(my_choice_last, food_earnings_last)
 
@@ -118,16 +121,12 @@ class Player(BasePlayer):
     # should be instance methods so don't forget to add 'self' as an extra first argument).
     def hunt_choices(self, round_number, current_food, current_reputation, m,
             player_reputations):
-        
-        print self.reps_last
-        print self.choices_last
-        print self.results_last
 
         choices = []
         if len(player_reputations) < 3: 
             # Always slack if it's down to three players or less
             choices = ['s']*len(player_reputations)
-        elif round_number == 1:
+        elif round_number < 3:
             # Always hunt the first round if there's more than 3 players
             choices = ['h']*len(player_reputations)
         else:
@@ -138,12 +137,12 @@ class Player(BasePlayer):
                 choices.append(self.calculate_choice(rep))
 
         # Save my choices and the player_reputations for next round
-        self.choices_last = choices
-        self.reps_last = player_reputations
+        self.choices_last = list(choices)
+        self.reps_last = list(player_reputations)
         return choices
 
     def hunt_outcomes(self, food_earnings):
-        self.results_last = food_earnings
+        self.results_last = list(food_earnings)
 
     def round_end(self, award, m, number_hunters):
         pass

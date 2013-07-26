@@ -364,7 +364,7 @@ class ReversePsychologyHunter(BasePlayer):
                                                  len(player_reputations))
         slacks_needed = len(player_reputations)-hunts_needed
 
-        print 'sorted', sorted_reps, 'idx', int(0.1 * len(player_reputations)), 'ideal:', ideal_rep, 'hunts needed:', hunts_needed, 'curr_rep', current_reputation
+        # print 'sorted', sorted_reps, 'idx', int(0.1 * len(player_reputations)), 'ideal:', ideal_rep, 'hunts needed:', hunts_needed, 'curr_rep', current_reputation
 
         if round_number == 1:
             return self.initial_choices(player_reputations)

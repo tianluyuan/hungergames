@@ -65,17 +65,85 @@ class Player(BasePlayer):
         """
         # Run the inherited class' __init__
         super(Player, self).__init__()
+        self.name = 'TMoney'
+        
+        # Keep track of these from the previous round
+        self.reps_last = []
+        self.choices_last = []
+        self.results_last = []
+
+
+    def most_likely_last_index(self, curr_rep):
+        ''' Return the index of the reps_last array that contains the last_rep 
+        closest to curr_rep
+        '''
+        return min(range(len(self.reps_last)), key=lambda i: abs(self.reps_last[i]-curr_rep))
+
+    def make_decision(self, my_choice, food_earnings):
+        ''' Make a tit-for-tat decision based on the outcome from the previous
+        round.  Given the choice my_choice from the last round, and the food earnings
+        we can determine what the other player's action was, and use that as our action
+        for this round.
+        '''
+        
+        if 'h' in my_choice:
+            # If I hunted last round
+            # If they hunted, food_earnings will be 0
+            return 'h' if food_earnings==0 else 's'        
+        else:
+            # Otherwise I must have slacked
+            # If they hunted, food_earnings will be 1
+            return 'h' if food_earnings==1 else 's'
+
+    def calculate_choice(self, partner_rep):
+        ''' Calculate whether to hunt or slack based on partner_rep, the current reputation
+        of my partner
+        '''
+        
+        # Position of partner in the last round
+        idx_last_round = self.most_likely_last_index(partner_rep)
+
+        # my choice last round at idx_last_round and the food_earnings from it
+        my_choice_last = self.choices_last[idx_last_round]
+        food_earnings_last = self.results_last[idx_last_round]
+
+        if partner_rep ==0:
+            print 'idx', idx_last_round
+            print 'choice', my_choice_last
+            print 'earnings',food_earnings_last
+
+        return self.make_decision(my_choice_last, food_earnings_last)
 
     # All the other functions are the same as with the non object oriented setting (but they
     # should be instance methods so don't forget to add 'self' as an extra first argument).
-
     def hunt_choices(self, round_number, current_food, current_reputation, m,
             player_reputations):
-        hunt_decisions = ['h' for x in player_reputations] # replace logic with your own
-        return hunt_decisions
+        
+        print self.reps_last
+        print self.choices_last
+        print self.results_last
+
+        choices = []
+        if len(player_reputations) < 3: 
+            # Always slack if it's down to three players or less
+            choices = ['s']*len(player_reputations)
+        elif round_number == 1:
+            # Always hunt the first round if there's more than 3 players
+            choices = ['h']*len(player_reputations)
+        else:
+            # Otherwise, hunt using a probabilistic tit-for-tat strategy
+            # which matches reps to the closest value from the array of
+            # self.reps_last to determine who most likely did what the last round
+            for rep in player_reputations:
+                choices.append(self.calculate_choice(rep))
+
+        # Save my choices and the player_reputations for next round
+        self.choices_last = choices
+        self.reps_last = player_reputations
+        return choices
 
     def hunt_outcomes(self, food_earnings):
-        pass # do nothing
+        self.results_last = food_earnings
 
     def round_end(self, award, m, number_hunters):
-        pass # do nothing
+        pass

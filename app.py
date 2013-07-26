@@ -5,7 +5,7 @@ from Player import Player
 
 # Bare minimum test game. See README.md for details.
 
-players = [SmarterMaxRepHunter(), 
+players = [SmarterMaxRepHunter(), Player(),
            StatusQuo(), AvgHunter(), AvgSlacker(),
            Alternator(), 
            StatusQuo(), Random(0.3),

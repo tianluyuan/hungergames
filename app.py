@@ -6,27 +6,28 @@ from Player import Player
 # Bare minimum test game. See README.md for details.
 
 players = [SmarterMaxRepHunter(), Player(),
-           Alternator(),
+           Alternator(), ReversePsychologyHunter(),
+           StatusQuo(), Random(0.3), StatusQuoSlacker(),
+           Freeloader(), StatusQuo(), FairHunter(),
+           AvgHunter(), AverageHunter(),
+           SmarterMaxRepHunter(), SmarterMaxRepHunter(), 
+           StatusQuo(), Random(0.7), ReversePsychologyHunter(),
            StatusQuo(), Random(0.3),
-           Freeloader(), StatusQuo(), FairHunter(),]
-           # SmarterMaxRepHunter(), SmarterMaxRepHunter(), 
-           # StatusQuo(), Random(0.7), ReversePsychologyHunter(),
-           # StatusQuo(), Random(0.3),
-           # Freeloader(), StatusQuo(), FairHunter(), 
-           # SmarterMaxRepHunter(), SmarterMaxRepHunter(), 
-           # StatusQuo(), Random(0.7), ReversePsychologyHunter(),
-           # StatusQuo(), Random(0.3),
-           # Freeloader(), StatusQuo(), FairHunter(), 
-           # SmarterMaxRepHunter(), SmarterMaxRepHunter(), 
-           # StatusQuo(), Random(0.7), ReversePsychologyHunter(),
-           # StatusQuo(), Random(0.3),
-           # Freeloader(), StatusQuo(), FairHunter(), 
-           # SmarterMaxRepHunter(), SmarterMaxRepHunter(), 
-           # StatusQuo(), Random(0.7), ReversePsychologyHunter(),
-           # StatusQuo(), FoodTatForTit(), 
-           # FairHunter(), AverageHunter(),
-           # BoundedHunter(0.7,1.0),
-           # FoodTitForTat(), StatusQuoSlacker()]
+           Freeloader(), StatusQuo(), FairHunter(), 
+           SmarterMaxRepHunter(), SmarterMaxRepHunter(), 
+           StatusQuo(), Random(0.7), ReversePsychologyHunter(),
+           StatusQuo(), Random(0.3),
+           Freeloader(), StatusQuo(), FairHunter(), 
+           SmarterMaxRepHunter(), SmarterMaxRepHunter(), 
+           StatusQuo(), Random(0.7), ReversePsychologyHunter(),
+           StatusQuo(), Random(0.3),
+           Freeloader(), StatusQuo(), FairHunter(), 
+           SmarterMaxRepHunter(), SmarterMaxRepHunter(), 
+           StatusQuo(), Random(0.7), ReversePsychologyHunter(),
+           StatusQuo(), FoodTatForTit(), 
+           FairHunter(), AverageHunter(),
+           BoundedHunter(0.7,1.0),
+           FoodTitForTat(), StatusQuoSlacker()]
 
 game = Game(players)
 

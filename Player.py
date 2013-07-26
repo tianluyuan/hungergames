@@ -107,13 +107,15 @@ class Player(BasePlayer):
         my_choice_last = self.choices_last[idx_last_round]
         food_earnings_last = self.results_last[idx_last_round]
 
-        # print 'partner rep', partner_rep
-        # print 'idx', idx_last_round
-        # print 'choice', my_choice_last
-        # print 'earnings',food_earnings_last
-        # print 'reps last', self.reps_last
-        # print 'choices last', self.choices_last
-        # print 'results last', self.results_last
+        # DEBUG
+        # if partner_rep == 0:
+        #     print 'partner rep', partner_rep
+        #     print 'idx', idx_last_round
+        #     print 'choice', my_choice_last
+        #     print 'earnings',food_earnings_last
+        #     print 'reps last', self.reps_last
+        #     print 'choices last', self.choices_last
+        #     print 'results last', self.results_last
 
         return self.make_decision(my_choice_last, food_earnings_last)
 

@@ -125,8 +125,8 @@ class Player(BasePlayer):
             player_reputations):
 
         choices = []
-        if len(player_reputations) < 3: 
-            # Always slack if it's down to three players or less
+        if len(player_reputations) < 2:
+            # Always slack if it's down to two players
             choices = ['s']*len(player_reputations)
         elif round_number < 3:
             # Always hunt the first round if there's more than 3 players

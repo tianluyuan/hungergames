@@ -26,7 +26,7 @@ players = [SmarterMaxRepHunter(), Player(),
            StatusQuo(), Random(0.7), ReversePsychologyHunter(),
            StatusQuo(), FoodTatForTit(), 
            FairHunter(), AverageHunter(),
-           BoundedHunter(0.7,1.0),
+           BoundedHunter(0.7,1.0), TitForTat(),
            FoodTitForTat(), StatusQuoSlacker()]
 
 game = Game(players)

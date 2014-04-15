@@ -10,13 +10,13 @@ This is an OOP solution where player classes are expected to inherit from a base
 
 *    First, try `python unittest.py`. You will see some test output. If the last line says anything except `OK`, there is a bug. Please let me know (see "Bugs", below).
 
-*    `python app.py` runs a sample game with exactly one of each test bot. It's 3 lines of code and pretty easy to generalize to whatever custom players you might make up.
+*    `python app.py` runs a sample game with exactly one of each test bot. You can change the number of bots and Game parameters with arguments to this command (use `python app.py --help` for more details).
 
 *    If you want to step through rounds one at a time rather than run the whole game in one shot, you can use `Game.play_round()` instead of `Game.play_game()`. You can also complete the game at any time using `play_game` even after stepping through some rounds.
 
 *    If you're new to Python and just want to test a given solution against the builtin robots, edit `Player.py` and fill your solution in the class at the bottom.
 
-*    You can modify the maximum and average number of rounds using parameters to the `Game` initializer, e.g. `game = Game(players, min_rounds=1000, average_rounds=20000)`. An easy way to see the options is `pydoc Game.Game`, or by entering the shell with `python` and typing `from Game import Game; help(Game)`.
+*    You can modify the Game options (ie: maximum and average number of rounds) with one of two mechanisms. 1) Editing the defaults in app.py.  For example `DEFAULT_AVERAGE_ROUNDS = 500`. 2) Specifying command-line arguments through app.py (see `python app.py -h` for more information).
 
 *    All players inherit from `Player.BasePlayer`.
 
@@ -29,6 +29,8 @@ I will deliberately be keeping this repo free of *any* strategic information unt
 ## Bugs
 
 If you find a bug, the fastest way to tell me is by submitting an issue on the [tracker](https://github.com/ChadAMiller/hungergames/issues) (I have email notification turned on). You can also email me (address in my [profile](https://github.com/ChadAMiller)).
+
+There is one known bug that won't be fixed: The official server will replace any errors with all-slacking in the event that a player returns an invalid result from `hunt_choices`. This simulation will crash if the output is not a list, and return nonsensical results if the list is the wrong length or contains invalid values. See the tracker for a suggested fix if you want to catch these kinds of problems.
 
 ## Patches/Pull Requests
 

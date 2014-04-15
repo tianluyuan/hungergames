@@ -1,6 +1,8 @@
 from __future__ import division, print_function
 import random
 
+from Player import Player
+
 # Primary engine for the game simulation. You shouldn't need to edit
 # any of this if you're just testing strategies.
 
@@ -43,7 +45,7 @@ class GamePlayer(object):
     
 class Game(object):
     '''
-    Game(players, verbose=True, min_rounds=300, average_rounds=1000)
+    Game(players, verbose=True, min_rounds=300, average_rounds=1000, end_early=False)
     
     Primary game engine for the sim. players should be a list of players
     as defined in Player.py or bots.py. verbose determines whether the game
@@ -52,24 +54,35 @@ class Game(object):
     Per the rules, the game has a small but constant probability of ending
     each round after min_rounds. The current defaults are completely arbitrary;
     feel free to play with them.
+
+    End_early is an option to allow you to better test your strategy.  If specified
+    as True, the game will end if the 'Player' player is eliminated (in addition
+    to ending if any of the other game end conditions are met).
         
     Call game.play_game() to run the entire game at once, or game.play_round()
     to run one round at a time.
     
     See app.py for a bare-minimum test game.
     '''   
-    def __init__(self, players, verbose=True, min_rounds=5000, average_rounds=10000):
+    def __init__(self, players, verbose=True, min_rounds=300, average_rounds=1000, end_early=False):
         self.verbose = verbose
+        assert average_rounds > min_rounds, "average_rounds must be greater than min_rounds"
         self.max_rounds = min_rounds + int(random.expovariate(1/(average_rounds-min_rounds)))
         self.round = 0
         self.hunt_opportunities = 0
+        self.end_early = end_early
         
-        self.players = players # to set self.P
-        start_food = 300*(self.P-1)
+        start_food = 300*(len(players)-1)
         
         self.players = [GamePlayer(self,p,start_food) for p in players]
-        
-        
+
+        if self.verbose:
+            print("Game parameters:\n # players: %d\n verbose: %s\n " \
+                  "min_rounds: %d\n average_rounds: %d\n " \
+                  "end_early: %s\n" % (len(players), verbose, \
+                                       min_rounds, average_rounds,
+                                       end_early))
+
     @property
     def m_bonus(self):
         return 2*(self.P-1)
@@ -140,19 +153,24 @@ class Game(object):
                 print (p)
                    
         
-        if self.game_over():            
+        if self.game_over():
             print ("Game Completed after {} rounds".format(self.round))
             raise StopIteration
             
         
     def game_over(self):        
         starved = [p for p in self.players if p.food <= 0]
+        quit = False
+
         for p in starved:
             print ("{} has starved and been eliminated in round {}".format(p.player, self.round))
-        
+
+            if isinstance(p.player, Player) and self.end_early:
+                quit = True
+
         self.players = [p for p in self.players if p.food > 0]
         
-        return (self.P < 2) or (self.round > self.max_rounds)
+        return (self.P < 2) or (self.round > self.max_rounds) or quit
         
         
     def play_game(self):
@@ -161,7 +179,7 @@ class Game(object):
         Written this way so that I can step through rounds one at a time
         '''
         print ("Playing the game to the end:")
-        
+
         while True:
             try:
                 self.play_round()
